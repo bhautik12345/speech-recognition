@@ -125,7 +125,7 @@ st.markdown("Record directly or upload an audio file to get started.")
 st.markdown("#### 🎤 Record Audio")
 audio_file = st.audio_input("Record your audio", label_visibility='collapsed')
 
-st.markdown(---)
+st.markdown("---")
 
 with st.expander("📁 Upload an Audio File"):
     uploaded_file = st.file_uploader(
