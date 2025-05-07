@@ -87,9 +87,6 @@ st.markdown("""
         .main {
             background-color: #f4f6f8;
         }
-        .stTextInput>div>div>input {
-            background-color: #ffffff;
-        }
         .block-container {
             padding-top: 2rem;
         }
@@ -125,14 +122,19 @@ st.subheader("📥 Upload or Record Audio")
 st.markdown("Record directly or upload an audio file to get started.")
 
 col1, col2 = st.columns(2)
+
 with col1:
-    audio_file = st.audio_input("🎤 Record Audio", label_visibility='collapsed')
+    st.markdown("#### 🎤 Record Audio")
+    audio_file = st.audio_input("Record your audio", label_visibility='collapsed')
+
 with col2:
-    uploaded_file = st.file_uploader(
-        "📁 Browse Audio File",
-        type=['flac', 'mp3', 'mp4', 'mpeg', 'mpga', 'm4a', 'ogg', 'wav', 'webm'],
-        accept_multiple_files=False
-    )
+    with st.expander("📁 Upload an Audio File"):
+        uploaded_file = st.file_uploader(
+            "Choose File",
+            type=['flac', 'mp3', 'mp4', 'mpeg', 'mpga', 'm4a', 'ogg', 'wav', 'webm'],
+            accept_multiple_files=False
+        )
+
 
 # ---- MAIN LOGIC ----
 client = Client(api_key=groq_api_key)
