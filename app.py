@@ -81,31 +81,6 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# ---- CUSTOM CSS ----
-st.markdown("""
-    <style>
-        .main {
-            background-color: #f4f6f8;
-        }
-
-        .block-container {
-            padding-top: 2rem;
-        }
-
-        .stAudio {
-            margin-bottom: 20px;
-        }
-
-        .stButton>button {
-            background-color: #4a90e2;
-            color: white;
-            font-weight: bold;
-            border-radius: 8px;
-        }
-    </style>
-""", unsafe_allow_html=True)
-
-
 # ---- HEADER ----
 st.title("🎙️ AI Speech Recognition")
 st.caption("Effortlessly transcribe audio in multiple languages with Whisper")
