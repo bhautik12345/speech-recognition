@@ -140,7 +140,7 @@ client = Client(api_key=groq_api_key)
 
 if groq_api_key and select_language:
     if audio_file:
-        st.spinner("Transcribing recorded audio..."):
+        with st.spinner("Transcribing recorded audio..."):
             audio_bytes = audio_file.getvalue()
             response = client.audio.transcriptions.create(
                 file=('recorded_audio.wav', io.BytesIO(audio_bytes)),
@@ -152,7 +152,7 @@ if groq_api_key and select_language:
             st.write(response)
 
     elif uploaded_file:
-        st.spinner("Transcribing uploaded audio file..."):
+        with st.spinner("Transcribing uploaded audio file..."):
             audio_bytes = uploaded_file.read()
             response = client.audio.transcriptions.create(
                 file=(uploaded_file.name, audio_bytes),
