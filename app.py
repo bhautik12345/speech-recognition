@@ -87,13 +87,15 @@ st.markdown("""
         .main {
             background-color: #f4f6f8;
         }
-        
+
         .block-container {
             padding-top: 2rem;
         }
+
         .stAudio {
             margin-bottom: 20px;
         }
+
         .stButton>button {
             background-color: #4a90e2;
             color: white;
@@ -102,6 +104,7 @@ st.markdown("""
         }
     </style>
 """, unsafe_allow_html=True)
+
 
 # ---- HEADER ----
 st.title("🎙️ AI Speech Recognition")
@@ -134,7 +137,7 @@ with st.expander("📁 Upload an Audio File"):
         accept_multiple_files=False
     )
 
-
+st.markdown("---")
 # ---- MAIN LOGIC ----
 client = Client(api_key=groq_api_key)
 
