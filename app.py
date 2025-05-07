@@ -25,6 +25,7 @@ languages = {
     "Georgian": "ka",
     "German": "de",
     "Greek": "el",
+    "Gujarati": "gu",
     "Hebrew": "he",
     "Hindi": "hi",
     "Hungarian": "hu",
