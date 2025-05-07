@@ -87,6 +87,7 @@ st.markdown("""
         .main {
             background-color: #f4f6f8;
         }
+        
         .block-container {
             padding-top: 2rem;
         }
@@ -121,19 +122,17 @@ select_language = st.sidebar.selectbox(
 st.subheader("📥 Upload or Record Audio")
 st.markdown("Record directly or upload an audio file to get started.")
 
-col1, col2 = st.columns(2)
+st.markdown("#### 🎤 Record Audio")
+audio_file = st.audio_input("Record your audio", label_visibility='collapsed')
 
-with col1:
-    st.markdown("#### 🎤 Record Audio")
-    audio_file = st.audio_input("Record your audio", label_visibility='collapsed')
+st.markdown(---)
 
-with col2:
-    with st.expander("📁 Upload an Audio File"):
-        uploaded_file = st.file_uploader(
-            "Choose File",
-            type=['flac', 'mp3', 'mp4', 'mpeg', 'mpga', 'm4a', 'ogg', 'wav', 'webm'],
-            accept_multiple_files=False
-        )
+with st.expander("📁 Upload an Audio File"):
+    uploaded_file = st.file_uploader(
+        "Choose File",
+        type=['flac', 'mp3', 'mp4', 'mpeg', 'mpga', 'm4a', 'ogg', 'wav', 'webm'],
+        accept_multiple_files=False
+    )
 
 
 # ---- MAIN LOGIC ----
@@ -141,30 +140,28 @@ client = Client(api_key=groq_api_key)
 
 if groq_api_key and select_language:
     if audio_file:
-        st.info("Transcribing recorded audio...")
-
-        audio_bytes = audio_file.getvalue()
-        response = client.audio.transcriptions.create(
-            file=('recorded_audio.wav', io.BytesIO(audio_bytes)),
-            model='whisper-large-v3',
-            response_format='text',
-            language=languages[select_language]
-        )
-        st.success("📝 Transcription Complete")
-        st.write(response)
+        st.spinner("Transcribing recorded audio...")
+            audio_bytes = audio_file.getvalue()
+            response = client.audio.transcriptions.create(
+                file=('recorded_audio.wav', io.BytesIO(audio_bytes)),
+                model='whisper-large-v3',
+                response_format='text',
+                language=languages[select_language]
+            )
+            st.success("📝 Transcription Complete")
+            st.write(response)
 
     elif uploaded_file:
-        st.info("Transcribing uploaded audio file...")
-
-        audio_bytes = uploaded_file.read()
-        response = client.audio.transcriptions.create(
-            file=(uploaded_file.name, audio_bytes),
-            model='whisper-large-v3',
-            response_format='text',
-            language=languages[select_language]
-        )
-        st.success("📝 Transcription Complete")
-        st.write(response)
+        st.spinner("Transcribing uploaded audio file...")
+            audio_bytes = uploaded_file.read()
+            response = client.audio.transcriptions.create(
+                file=(uploaded_file.name, audio_bytes),
+                model='whisper-large-v3',
+                response_format='text',
+                language=languages[select_language]
+            )
+            st.success("📝 Transcription Complete")
+            st.write(response)
 
     else:
         st.warning("Please record or upload an audio file to continue.")
