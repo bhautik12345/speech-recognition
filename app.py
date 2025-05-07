@@ -69,46 +69,98 @@ languages = {
     "Welsh": "cy"
 }
 
-st.set_page_config(page_title='Speech Recognition')
-st.title('Speech Recognition')
-st.subheader("Let's Play With Audio")
+# ---- PAGE CONFIG ----
+st.set_page_config(
+    page_title="🎙️ Speech Recognition",
+    page_icon="🎧",
+    layout="centered",
+    initial_sidebar_state="expanded"
+)
 
-st.sidebar.title('Settings')
-groq_api_key = st.sidebar.text_input('Put Your Groq API key',type='password')
-select_language = st.sidebar.selectbox(label="language",index=None,placeholder='Select Language..',options=list(languages.keys()),label_visibility='collapsed')
+# ---- CUSTOM CSS ----
+st.markdown("""
+    <style>
+        .main {
+            background-color: #f4f6f8;
+        }
+        .stTextInput>div>div>input {
+            background-color: #ffffff;
+        }
+        .block-container {
+            padding-top: 2rem;
+        }
+        .stAudio {
+            margin-bottom: 20px;
+        }
+        .stButton>button {
+            background-color: #4a90e2;
+            color: white;
+            font-weight: bold;
+            border-radius: 8px;
+        }
+    </style>
+""", unsafe_allow_html=True)
 
-audio_file = st.audio_input('Records',label_visibility='collapsed')
-uploaded_file = st.file_uploader('Choose An Audio file From Browse',type=['flac', 'mp3', 'mp4', 'mpeg', 'mpga', 'm4a', 'ogg', 'wav', 'webm'],accept_multiple_files=False)
+# ---- HEADER ----
+st.title("🎙️ AI Speech Recognition")
+st.caption("Effortlessly transcribe audio in multiple languages with Whisper")
 
+# ---- SIDEBAR ----
+st.sidebar.title("⚙️ Settings")
+groq_api_key = st.sidebar.text_input('🔐 Enter Your Groq API Key', type='password')
+select_language = st.sidebar.selectbox(
+    label="Select Language",
+    index=None,
+    placeholder='🌐 Choose Language...',
+    options=list(languages.keys()),
+    label_visibility='collapsed'
+)
+
+# ---- INPUT AREA ----
+st.subheader("📥 Upload or Record Audio")
+st.markdown("Record directly or upload an audio file to get started.")
+
+col1, col2 = st.columns(2)
+with col1:
+    audio_file = st.audio_input("🎤 Record Audio", label_visibility='collapsed')
+with col2:
+    uploaded_file = st.file_uploader(
+        "📁 Browse Audio File",
+        type=['flac', 'mp3', 'mp4', 'mpeg', 'mpga', 'm4a', 'ogg', 'wav', 'webm'],
+        accept_multiple_files=False
+    )
+
+# ---- MAIN LOGIC ----
 client = Client(api_key=groq_api_key)
 
 if groq_api_key and select_language:
     if audio_file:
-        st.audio(audio_file)
+        st.info("Transcribing recorded audio...")
 
         audio_bytes = audio_file.getvalue()
-
         response = client.audio.transcriptions.create(
-            file=('recorded_audio.wav',io.BytesIO(audio_bytes)),
+            file=('recorded_audio.wav', io.BytesIO(audio_bytes)),
             model='whisper-large-v3',
             response_format='text',
             language=languages[select_language]
         )
-
+        st.success("📝 Transcription Complete")
         st.write(response)
 
     elif uploaded_file:
-        audio_bytes = uploaded_file.read()
+        st.info("Transcribing uploaded audio file...")
 
+        audio_bytes = uploaded_file.read()
         response = client.audio.transcriptions.create(
-            file=(uploaded_file.name,audio_bytes),
+            file=(uploaded_file.name, audio_bytes),
             model='whisper-large-v3',
             response_format='text',
             language=languages[select_language]
         )
+        st.success("📝 Transcription Complete")
         st.write(response)
 
+    else:
+        st.warning("Please record or upload an audio file to continue.")
 else:
-    st.error('Please Provide All The Information')
-        
-
+    st.error("Please enter your API key and select a language.")
